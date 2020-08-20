@@ -10,13 +10,13 @@
 
     <TextView
         android:id="@+id/comment1"
-        android:textSize="40sp"
+        android:textSize="30sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="以上で使い方説明は終わります。"
+        android:text="アプリをインストールして頂きありがとうございます。\n今から簡単にこのアプリの使い方を説明していきます。\n１０秒でわかるのでお付き合いください。"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginTop="165dp"
+        android:layout_marginTop="80dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
