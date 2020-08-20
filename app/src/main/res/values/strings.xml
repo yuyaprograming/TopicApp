@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TopicApp</string>
+    <string name="title_activity_fifth">FifthActivity</string>
 </resources>
