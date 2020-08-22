@@ -3,13 +3,14 @@
     package="jp.techacademy.date.yuuya.topicapp">
 
     <application
+        android:name=".TaskApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SixthActivity"></activity>
+        <activity android:name=".SixthActivity" />
         <activity
             android:name=".FifthActivity"
             android:label="@string/title_activity_fifth"
@@ -23,6 +24,15 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".InputActivity"
+            android:label="タスク"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="jp.techacademy.date.yuuya.topicapp.FifthActivity"/>
         </activity>
     </application>
 
