@@ -1,11 +1,19 @@
 package jp.techacademy.date.yuuya.topicapp
 
+import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.TextView
 
-class TopicAdapter : BaseAdapter() {
-    var topicList = mutableListOf<String>()
+class TopicAdapter(context: Context): BaseAdapter() {
+    private var mLayoutInflater: LayoutInflater = LayoutInflater.from(context)
+    var topicList = mutableListOf<Topic>()
+
+    init {
+        this.mLayoutInflater = LayoutInflater.from(context)
+    }
 
     override fun getCount(): Int {
         return topicList.size
@@ -16,10 +24,16 @@ class TopicAdapter : BaseAdapter() {
     }
 
     override fun getItemId(position: Int): Long {
-        return 0
+        return topicList[position].id.toLong()
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val view: View = convertView ?: mLayoutInflater.inflate(android.R.layout.simple_list_item_2, null)
+
+        val textView1 = view.findViewById<TextView>(android.R.id.text1)
+
+        textView1.text = topicList[position].contents
+
+        return view
     }
 }

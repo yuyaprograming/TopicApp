@@ -33,7 +33,6 @@ class TaskAdapter(context: Context): BaseAdapter() {
         val view: View = convertView ?: mLayoutInflater.inflate(android.R.layout.simple_list_item_2, null)
 
         val textView1 = view.findViewById<TextView>(android.R.id.text1)
-        val textView2 = view.findViewById<TextView>(android.R.id.text2)
 
         textView1.text = taskList[position].title
 
