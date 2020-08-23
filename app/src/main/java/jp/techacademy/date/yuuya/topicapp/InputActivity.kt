@@ -3,15 +3,22 @@ package jp.techacademy.date.yuuya.topicapp
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import io.realm.Realm
 import io.realm.RealmChangeListener
 import io.realm.Sort
 import kotlinx.android.synthetic.main.content_input.*
 import java.util.*
 
+const val EXTRA_TOPIC = "jp.techacademy.date.yuuya.topicapp.TOPIC"
+
 class InputActivity : AppCompatActivity() {
     private lateinit var nRealm: Realm
-    private val nRealmListener = RealmChangeListener<Realm> { reloadListView() }
+    private val nRealmListener = object : RealmChangeListener<Realm> {
+        override fun onChange(element: Realm) {
+            reloadListView()
+        }
+    }
 
     private lateinit var mTopicAdapter: TopicAdapter
 
@@ -34,20 +41,40 @@ class InputActivity : AppCompatActivity() {
         // ListViewをタップしたときの処理
         listView2.setOnItemClickListener { parent, view, position, id ->
             // 入力・編集する画面に遷移させる
-            val task = parent.adapter.getItem(position) as Topic
-            val intent = Intent(this@MainActivity, InputActivity::class.java)
-            intent.putExtra(EXTRA_TASK, task.id)
+            val topic = parent.adapter.getItem(position) as Topic
+            val intent = Intent(this@InputActivity, TopicActivity::class.java)
+            intent.putExtra(EXTRA_TOPIC, topic.id)
             startActivity(intent)
         }
 
         // ListViewを長押ししたときの処理
-        listView2.setOnItemLongClickListener { parent, view, position, id ->
+        listView2.setOnItemLongClickListener { parent, _, position, _ ->
             // タスクを削除する
+            val topic = parent.adapter.getItem(position) as Topic
+
+            // ダイアログを表示する
+            val builder = AlertDialog.Builder(this@InputActivity)
+
+            builder.setTitle("削除")
+            builder.setMessage(topic.title + "を削除しますか")
+
+            builder.setPositiveButton("OK"){_, _ ->
+                val results = nRealm.where(Topic::class.java).equalTo("id", topic.id).findAll()
+
+                nRealm.beginTransaction()
+                results.deleteAllFromRealm()
+                nRealm.commitTransaction()
+
+                reloadListView()
+            }
+
+            builder.setNegativeButton("CANCEL", null)
+
+            val dialog = builder.create()
+            dialog.show()
+
             true
         }
-
-        // アプリ起動時に表示テスト用のタスクを作成する
-        addTaskForTest()
 
         reloadListView()
     }
@@ -70,16 +97,5 @@ class InputActivity : AppCompatActivity() {
         super.onDestroy()
 
         nRealm.close()
-    }
-
-    private fun addTaskForTest() {
-        val task = Task()
-        task.title = "作業"
-        task.contents = "プログラムを書いてPUSHする"
-        task.date = Date()
-        task.id = 0
-        nRealm.beginTransaction()
-        nRealm.copyToRealmOrUpdate(task)
-        nRealm.commitTransaction()
     }
 }

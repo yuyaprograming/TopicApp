@@ -9,6 +9,13 @@ import kotlinx.android.synthetic.main.topic_input.*
 
 class TopicActivity : AppCompatActivity() {
 
+    private var mTopic: Topic? = null
+
+    private val mOnDoneClickListener = View.OnClickListener {
+        addTask()
+        finish()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_topic)
@@ -24,15 +31,16 @@ class TopicActivity : AppCompatActivity() {
 
         // EXTRA_TASK から Task の id を取得して、 id から Task のインスタンスを取得する
         val intent = intent
-        val taskId = intent.getIntExtra(EXTRA_TASK, -1)
+        val taskId = intent.getIntExtra(EXTRA_TOPIC, -1)
         val realm = Realm.getDefaultInstance()
-        mTask = realm.where(Task::class.java).equalTo("id", taskId).findFirst()
+        mTopic = realm.where(Topic::class.java).equalTo("id", taskId).findFirst()
         realm.close()
 
-        if (mTask != null) {
+        if (mTopic == null) {
+            // 新規作成の場合
+        } else {
             // 更新の場合
-            content_edit_text.setText(mTask!!.contents)
-
+            content_edit_text.setText(mTopic!!.contents)
         }
     }
 
@@ -41,26 +49,26 @@ class TopicActivity : AppCompatActivity() {
 
         realm.beginTransaction()
 
-        if (mTask == null) {
+        if (mTopic == null) {
             // 新規作成の場合
-            mTask = Task()
+            mTopic = Topic()
 
-            val taskRealmResults = realm.where(Task::class.java).findAll()
+            val topicRealmResults = realm.where(Topic::class.java).findAll()
 
             val identifier: Int =
-                if (taskRealmResults.max("id") != null) {
-                    taskRealmResults.max("id")!!.toInt() + 1
+                if (topicRealmResults.max("id") != null) {
+                    topicRealmResults.max("id")!!.toInt() + 1
                 } else {
                     0
                 }
-            mTask!!.id = identifier
+            mTopic!!.id = identifier
         }
 
         val content = content_edit_text.text.toString()
 
-        mTask!!.contents = content
+        mTopic!!.contents = content
 
-        realm.copyToRealmOrUpdate(mTask!!)
+        realm.copyToRealmOrUpdate(mTopic!!)
         realm.commitTransaction()
 
         realm.close()
