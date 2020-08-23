@@ -20,7 +20,7 @@ class InputActivity : AppCompatActivity() {
         setContentView(R.layout.activity_input)
 
         topic_make.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, TopicActivity::class.java)
             startActivity(intent)
         }
 
